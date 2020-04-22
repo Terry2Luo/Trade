@@ -204,7 +204,6 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                     logger.error("projectcode:     "+dailyExpensesVO.getMmprojectcode());
                     logger.error(e.getMessage());
                 }
-
             }
 
             if(insertList != null && insertList.size() > 0){
@@ -214,7 +213,6 @@ public class MmProjectAnnualDailyExpensesServiceImpl
             if(contractProjectList != null && contractProjectList.size() > 0){
                 contractProjectService.updateBatch(contractProjectList);
             }
-
         }
 
         Calendar end = Calendar.getInstance();
