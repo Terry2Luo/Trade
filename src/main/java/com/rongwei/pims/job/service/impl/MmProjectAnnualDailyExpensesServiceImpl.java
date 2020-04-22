@@ -164,10 +164,10 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                     }
 
                     //已付款金额+已使用日常费用 > 已收款金额时；剩余分包资金为0
-                    if(BigDecimalUtil.doAdd(predailycostamount, totalpaidmoneyamount).compareTo(dailyExpensesVO.getTotalreceivemoneyamount()) == 1
-                    ){
-                        dailyExpensesVO.setAnnualpurchaseremaindamount(new BigDecimal(0));
-                    }else{
+//                    if(BigDecimalUtil.doAdd(predailycostamount, totalpaidmoneyamount).compareTo(dailyExpensesVO.getTotalreceivemoneyamount()) == 1
+//                    ){
+//                        dailyExpensesVO.setAnnualpurchaseremaindamount(new BigDecimal(0));
+//                    }else{
                         //无收入时，分包余额为0
                         if(dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() ==0
                                 ||dailyExpensesVO.getTotalpurchasecostamount() == null || dailyExpensesVO.getTotalpurchasecostamount().doubleValue() ==0
@@ -179,13 +179,13 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                                     .multiply(dailyExpensesVO.getTotalpurchasecostamount()) // getTotalpurchasecostamount
                                     .divide(dailyExpensesVO.getTotalrevenusamount(),6, BigDecimal.ROUND_HALF_UP)
                                     .subtract(totalpaidmoneyamount);
-                            if(annualpurchaseremaindamount.doubleValue() < 0){
-                                annualpurchaseremaindamount = new BigDecimal(0);
-                            }
+//                            if(annualpurchaseremaindamount.doubleValue() < 0){
+//                                annualpurchaseremaindamount = new BigDecimal(0);
+//                            }
                         }
 
                         dailyExpensesVO.setAnnualpurchaseremaindamount(annualpurchaseremaindamount);
-                    }
+//                    }
                     //年度日常费用 = 项目到款（累计值）- 历年日常费用 – 已付款-年度分包余额
                     dailyExpensesVO.setDailycostamount(dailyExpensesVO.getTotalreceivemoneyamount()
                             .subtract(totalpaidmoneyamount)
@@ -204,7 +204,6 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                     logger.error("projectcode:     "+dailyExpensesVO.getMmprojectcode());
                     logger.error(e.getMessage());
                 }
-
             }
 
             if(insertList != null && insertList.size() > 0){
@@ -214,7 +213,6 @@ public class MmProjectAnnualDailyExpensesServiceImpl
             if(contractProjectList != null && contractProjectList.size() > 0){
                 contractProjectService.updateBatch(contractProjectList);
             }
-
         }
 
         Calendar end = Calendar.getInstance();

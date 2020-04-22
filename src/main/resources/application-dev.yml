@@ -34,4 +34,12 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     # 合并多个DruidDataSource的监控数据
     #useGlobalDataSourceStat: true
+#
+job:
+  pims:
+    serverIp: http://192.168.0.154/
+    serverPort: 8080
+    userID: luxing
+    passWord: 000000
+
 
