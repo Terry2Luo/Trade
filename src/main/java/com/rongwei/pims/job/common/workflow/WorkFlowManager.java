@@ -19,8 +19,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.xml.ws.Action;
 import java.util.Arrays;
 
 
@@ -67,8 +69,9 @@ public class WorkFlowManager {
             "&scope=snsapi_userinfo" +
             "&agentid=1001655" +
             "&state=web_login@gyoss9#wechat_redirect";
-    
 
+    @Autowired
+    private AcOperatorService acOperatorService;
 
 
 
@@ -77,7 +80,7 @@ public class WorkFlowManager {
 
 //    bw.ren 2019年11月20日13:54:38
 //    参(ctrl)考(C)信科交建通消息推送
-    public void sendMessage(String userids,String warndept){
+    public void sendMessage(String userids,String deptWarnMes){
         //消息模板
         String Mess = Txt;
         logger.info("推送消息模板："+Mess);
@@ -95,8 +98,6 @@ public class WorkFlowManager {
        // Tousers = userids;
         //userid查询empid
         if(users.length > 0){
-
-            AcOperatorService acOperatorService = new AcOperatorServiceImpl();
             for(int i = 0; i < users.length; i ++){
                 logger.info("users[i]="+users[i]);
                 String ID = acOperatorService.getEMPIdByUserId(users[i]);
@@ -140,7 +141,7 @@ public class WorkFlowManager {
             }
         }
 
-        String contenttext = "{\"content\" : \"部门日常资金余额预警:" + warndept +"\"}";
+        String contenttext = "{\"content\" : " + deptWarnMes +"}";
         if(token != null && (Tousers != null || !"".equals(Tousers))){
             String sendMessageUrl = Message.replace("ACCESS_TOKEN", token);
             String mes = "{\"touser\" : \""+ Tousers

@@ -41,10 +41,22 @@
         EMAIL, PAGESTYLE, CAID, CAUSDERID, CAEMAIL, EMPID
     </sql>
 
-    <select id="getEMPIdByUserId"  parameterType="java.lang.String"  resultMap="BaseResultMap">
+    <select id="getEMPIdByUserId"  parameterType="java.lang.String"  resultType="com.rongwei.pims.job.domain.AcOperatorVO">
         select <include refid="Base_Column_List"/>
         from AC_OPERATOR
         where USERID = #{userId,jdbcType=VARCHAR}
     </select>
+
+    <select id="getOperatorByRoleIds"  parameterType="java.lang.String"  resultType="com.rongwei.pims.job.domain.AcOperatorVO">
+        select ao.OPERATORNAME,ao.EMPID,ao.USERID,aop.ORGID
+        from AC_OPERATOR ao
+        left join AC_OPERATORROLE aop on ao.OPERATORID = aop.OPERATORID
+        where aop.ROLEID in
+        <foreach collection="array" open="(" separator="," close=")" item="rid">
+            #{rid}
+        </foreach>
+    </select>
+
+
 
 </mapper>
