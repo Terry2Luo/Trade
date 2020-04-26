@@ -25,7 +25,7 @@ public class DeptDailyAmountWarnJob implements Job {
     @Autowired
     private AcOperatorService acOperatorService;
 
-    private static String[] roleIds = {"YGBZG","JYZG"};
+    private static String[] roleIds = {"YGBZG","CWZG"};
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -90,7 +90,9 @@ public class DeptDailyAmountWarnJob implements Job {
                     Long orgId = ac.getOrgId();
                     if(orgId.equals(deptid)){
                         String yUserId = ac.getUserid();
-                        ywmap.put(yUserId,ywvo);
+                        //以部门长userId和对应部门id作为key，防止value值被覆盖
+                        String ykeyString = yUserId+"-"+orgId;
+                        ywmap.put(ykeyString,ywvo);
                     }
                 }
             }
@@ -103,7 +105,9 @@ public class DeptDailyAmountWarnJob implements Job {
                     Long orgId = ac.getOrgId();
                     if(orgId.equals(deptid)){
                         String rUserId = ac.getUserid();
-                        rwmap.put(rUserId,rwvo);
+                        //以部门长userId和对应部门id作为key，防止value值被覆盖
+                        String rkeyString = rUserId+"-"+orgId;
+                        rwmap.put(rkeyString,rwvo);
                     }
                 }
             }
@@ -112,12 +116,17 @@ public class DeptDailyAmountWarnJob implements Job {
         }
         //找出运管部和财务部主管
         List<AcOperatorVO> zglist = acOperatorService.getOperatorByRoleIds(roleIds);
-        //所有主管empId
+        //去除重复的UserId
+        Set<String> userIds = new HashSet<>();
+        for(int i=0;i<zglist.size();i++){
+            String userid = zglist.get(i).getUserid();
+            userIds.add(userid);
+        }
+        //所有主管UserId
         StringBuffer userIdsBuffer = new StringBuffer();
-        if(zglist != null && zglist.size() > 0){
-            for(AcOperatorVO ac:zglist){
-                String zgUserId = ac.getUserid();
-                userIdsBuffer.append(zgUserId).append(",");
+        if(userIds.size() > 0){
+            for(String s : userIds){
+                userIdsBuffer.append(s).append(",");
             }
             String allUserIds = userIdsBuffer.substring(0, userIdsBuffer.length() - 1);
             this.sendMessageToZG(allUserIds,yellowWarnList,redWarnList);
@@ -134,12 +143,12 @@ public class DeptDailyAmountWarnJob implements Job {
         String today = sdf.format(date);
         //黄色预警部门通知部门长
         StringBuffer deptMesBuffer = new StringBuffer();
-        for(String userId:ywmap.keySet()){
+        for(String yk:ywmap.keySet()){
             //预警信息重置
             int bufferlen = deptMesBuffer.length();
             deptMesBuffer.delete(0,bufferlen);
             //根据用户名获取map中的信息
-            PrFinanceCapitalAnnualDeptVO deptVO = ywmap.get(userId);
+            PrFinanceCapitalAnnualDeptVO deptVO = ywmap.get(yk);
             String deptName = deptVO.getDeptName();
             //部门人工日常资金年度余额
             BigDecimal deptdailyremaindamount = deptVO.getDeptdailyremaindamount();
@@ -147,15 +156,17 @@ public class DeptDailyAmountWarnJob implements Job {
                     .append(deptName).append("】人工日常资金年度剩余余额为：【").append(deptdailyremaindamount)
                     .append("】万元【黄色预警】，小于【初始资金/4】【模拟法人】\"");
             String contenttext = deptMesBuffer.toString();
-            this.sendMessage("luxing",contenttext);
+            //获取部门长userid
+            String userId = yk.split("-")[0];
+            this.sendMessage(userId,contenttext);
         }
 
         //红色预警部门通知部门长
-        for(String userId:rwmap.keySet()){
+        for(String rk:rwmap.keySet()){
             //预警信息重置
             int bufferlen = deptMesBuffer.length();
             deptMesBuffer.delete(0,bufferlen);
-            PrFinanceCapitalAnnualDeptVO deptVO = rwmap.get(userId);
+            PrFinanceCapitalAnnualDeptVO deptVO = rwmap.get(rk);
             String deptName = deptVO.getDeptName();
             //部门人工日常资金年度余额
             BigDecimal deptdailyremaindamount = deptVO.getDeptdailyremaindamount();
@@ -163,7 +174,9 @@ public class DeptDailyAmountWarnJob implements Job {
                     .append(deptName).append("】人工日常资金年度剩余余额为：【").append(deptdailyremaindamount)
                     .append("】万元【红色预警】，小于【初始资金/8】【模拟法人】\"");
             String contenttext = deptMesBuffer.toString();
-            this.sendMessage("luxing",contenttext);
+            //获取部门长userid
+            String userId = rk.split("-")[0];
+            this.sendMessage(userId,contenttext);
         }
     }
 
