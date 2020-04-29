@@ -29,54 +29,30 @@ public class HttpRequestUtils {
 
     public static StringBuffer sendPost(String url, String serverIp, String serverPort
     , String userID, String passWord) {
+        String cookies = EosSessionUtils.getEosSession(url, serverIp, serverPort, userID, passWord);
+
         String serverHost = (new StringBuffer(serverIp).append(":").append(serverPort)).toString();
     	String serverAdress = (new StringBuffer("http://").append(serverHost).append("/default/")).toString();
     	
     	url = (new StringBuffer(serverAdress).append(url)).toString();
 
-    	String loginUrl = loginUrl = (new StringBuffer(serverAdress).append("com.pdiwt.portal.frame.login.flow")).toString();//登陆地址;
 
         HttpClient httpClient = new HttpClient();
-        httpClient.getParams().setCookiePolicy( 
-                CookiePolicy.BROWSER_COMPATIBILITY);
-        PostMethod postMethod = new PostMethod(loginUrl);
-        PostMethod postMethod2 = new PostMethod(url); 
-       
-        NameValuePair[] data = {
-                new NameValuePair("_eosFlowAction", "login"), 
-                new NameValuePair("acOperator/userid",userID),   //企业微信登陆时 userid 设置为微信UserId
-                new NameValuePair("acOperator/password", passWord),
-                new NameValuePair("_eosFlowKey", "9d88422b-a934-4314-ab49-ed1dd659b724.view0")}; 
-        postMethod.setRequestHeader("Referer", loginUrl); 
+        httpClient.getParams().setCookiePolicy( CookiePolicy.BROWSER_COMPATIBILITY);
+
+        PostMethod postMethod2 = new PostMethod(url);
+
         postMethod2.setRequestHeader("Host", serverHost); 
         postMethod2 
-        .setRequestHeader( 
-                "User-Agent", 
-                "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)"); 
+        .setRequestHeader( "User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)");
         postMethod2 
         .setRequestHeader("Accept", 
-                "application/json, text/javascript, */*; q=0.01"); 
-        postMethod.setRequestBody(data); 
+                "application/json, text/javascript, */*; q=0.01");
         StringBuffer returnJson = null;
-        try { 
-            httpClient.executeMethod(postMethod); 
-            StringBuffer response = new StringBuffer(); 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    postMethod.getResponseBodyAsStream(), "utf-8"));//以gb2312编码方式打印从服务器端返回的请求 
-            String line; 
-            while ((line = reader.readLine()) != null) { 
-                response.append(line).append( 
-                        System.getProperty("line.separator")); 
-            } 
-            reader.close(); 
-            //Header header = postMethod.getResponseHeader("Set-Cookie"); 
-            Cookie[] cookies=httpClient.getState().getCookies();//取出登陆成功后，服务器返回的cookies信息，里面保存了服务器端给的“临时证”
-            String tmpcookies=""; 
-            for(Cookie c:cookies){ 
-                tmpcookies=tmpcookies+c.toString()+";"; 
-            }
+        try {
 
-            postMethod2.setRequestHeader("cookie",tmpcookies);//将“临时证明”放入下一次的发贴请求操作中 
+
+            postMethod2.setRequestHeader("cookie",cookies);//将“临时证明”放入下一次的发贴请求操作中
             postMethod2.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "utf-8");//因为发贴时候有中文，设置一下请求编码
             postMethod2.setRequestHeader("Referer", 
             		(new StringBuffer(serverAdress)).toString());
@@ -104,8 +80,7 @@ public class HttpRequestUtils {
             returnJson = response1;
         } catch (Exception e) { 
         	logger.error(e.getMessage()); 
-        } finally { 
-            postMethod.releaseConnection(); 
+        } finally {
             postMethod2.releaseConnection(); 
         } 
         return returnJson;

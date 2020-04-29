@@ -34,6 +34,7 @@
             <version>1.2.54</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -142,6 +143,14 @@
             <groupId> org.springframework.boot </groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpclient</artifactId>-->
+            <!--<version>4.4</version>-->
+        <!--</dependency>-->
+
+
 
     </dependencies>
 
