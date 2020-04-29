@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.Calendar;
 
 /**
- * 分包资金余额定时任务
+ * 生产经营每日定时任务
  **/
 @Component
 public class PimsEveryDayJob implements Job {
@@ -28,7 +28,7 @@ public class PimsEveryDayJob implements Job {
 
     public static PimsEveryDayJob pimsEveryDayJob;
 
-    private static String everyDayJobUrl="com.rongwei.pims.pub.select.common.ManageDaySchedule..biz.ext";
+    private static String everyDayJobUrl="com.rongwei.pims.pub.select.common.ManageDaySchedule.biz.ext";
 
     public PimsEveryDayJob(){
 
@@ -44,7 +44,7 @@ public class PimsEveryDayJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        logger.info("结束调用定时开始");
+        logger.info("生产经营每日定时任务调用定时开始");
         //判断要查询的记录对应年份是否有对应表，没有则创建
         Calendar today = Calendar.getInstance();
         //当天预测明天的数据
@@ -53,7 +53,7 @@ public class PimsEveryDayJob implements Job {
         try{
             HttpRequestUtils.sendPost(everyDayJobUrl, roperties.getServerIp(), roperties.getServerPort(), roperties.getUserID(), roperties.getPassWord());
         }catch (Exception e){
-            logger.error("开始调用定时任务   "+e.getMessage());
+            logger.error("生产经营每日定时任务异常   "+e.getMessage());
         }
 
         logger.info("结束调用定时任务");

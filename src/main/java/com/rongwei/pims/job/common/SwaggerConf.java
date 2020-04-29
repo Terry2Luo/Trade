@@ -22,7 +22,7 @@ public class SwaggerConf {
         //添加head参数配置start
         ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<>();
-        //tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
         pars.add(tokenPar.build());
         //添加head参数配置end
         return new Docket(DocumentationType.SWAGGER_2)
