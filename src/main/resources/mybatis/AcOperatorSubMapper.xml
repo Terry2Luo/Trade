@@ -48,7 +48,7 @@
     </select>
 
     <select id="getOperatorByRoleIds"  parameterType="java.lang.String"  resultType="com.rongwei.pims.job.domain.AcOperatorVO">
-        select ao.OPERATORNAME,ao.EMPID,ao.USERID,aop.ORGID
+        select distinct ao.OPERATORNAME,ao.USERID,aop.ORGID
         from AC_OPERATOR ao
         left join AC_OPERATORROLE aop on ao.OPERATORID = aop.OPERATORID
         where aop.ROLEID in
