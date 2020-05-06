@@ -37,31 +37,47 @@
       ) totalrevenus on totalrevenus.MM_PROJECT_ID = mcp.MMProjectId and totalrevenus.CONTRACT_ID = mcp.ContractId
 
       left join (
-      select a.MmProjectId, a.ContractID, sum(PaiedAmount) 'paidmoneyamount' from PM_PaymentProject a
-      join PM_Payment pay on pay.PaymentId = a.PaymentId
-      where DatePart(year, pay.PayDate) =#{year}
-      group by a.MmProjectId, a.ContractID
+          select a.MmProjectId, a.ContractID, sum(PaiedAmount) 'paidmoneyamount' from PM_PaymentProject a
+          join PM_Payment pay on pay.PaymentId = a.PaymentId
+          join PM_PurchaseContract c on a.PurchaseContractId = c.PurchaseContractId
+              and c.PurchaseContractId not in (
+                select PurchaseContractId from PM_PurchaseContract
+                  where isinsidecompany='Y' and MainDeptId = SupplierId
+              )
+          where DatePart(year, pay.PayDate) =#{year}
+          group by a.MmProjectId, a.ContractID
       ) paid on paid.MmProjectId = mcp.MMProjectId and paid.ContractID = mcp.ContractId
 
       left join (
-      select a.MmProjectId, a.ContractID, sum(PaiedAmount) 'totalpaidmoneyamount' from PM_PaymentProject a
-      join PM_Payment pay on pay.PaymentId = a.PaymentId
-      where DatePart(year, pay.PayDate) &lt;=#{year}
-      group by a.MmProjectId, a.ContractID
+          select a.MmProjectId, a.ContractID, sum(PaiedAmount) 'totalpaidmoneyamount' from PM_PaymentProject a
+          join PM_Payment pay on pay.PaymentId = a.PaymentId
+          join PM_PurchaseContract c on a.PurchaseContractId = c.PurchaseContractId
+              and c.PurchaseContractId not in (
+              select PurchaseContractId from PM_PurchaseContract
+              where isinsidecompany='Y' and MainDeptId = SupplierId
+              )
+          where DatePart(year, pay.PayDate) &lt;=#{year}
+          group by a.MmProjectId, a.ContractID
       ) totalpaid on totalpaid.MmProjectId = mcp.MMProjectId and totalpaid.ContractID = mcp.ContractId
 
       left join (
-      select a.ProjectId, c.ContractID, sum(a.ProjectOutput) 'purchasecostamount' from PM_PurchasePrjOutput a
-      Join PM_PURCHASE_OUTPUT b on b.PURCHASE_OUTPUT_ID = a.PURCHASE_OUTPUT_ID
-      join PM_PurchaseContract c on a.PurchaseContractId = c.PurchaseContractId
-      where DatePart(year, b.FINISHED_DATE) =#{year}
-      group by a.ProjectId, c.ContractID
+          select a.ProjectId, c.ContractID, sum(a.ProjectOutput) 'purchasecostamount' from PM_PurchasePrjOutput a
+          Join PM_PURCHASE_OUTPUT b on b.PURCHASE_OUTPUT_ID = a.PURCHASE_OUTPUT_ID
+          join PM_PurchaseContract c on a.PurchaseContractId = c.PurchaseContractId
+              and c.PurchaseContractId not in (
+                select PurchaseContractId from PM_PurchaseContract where isinsidecompany='Y' and MainDeptId = SupplierId
+              )
+          where DatePart(year, b.FINISHED_DATE) =#{year}
+          group by a.ProjectId, c.ContractID
       ) cost on cost.ProjectId = mcp.MMProjectId and cost.ContractID = mcp.ContractId
 
       left join (
       select a.ProjectId, c.ContractID, sum(a.ProjectOutput) 'totalpurchasecostamount' from PM_PurchasePrjOutput a
       Join PM_PURCHASE_OUTPUT b on b.PURCHASE_OUTPUT_ID = a.PURCHASE_OUTPUT_ID
       join PM_PurchaseContract c on a.PurchaseContractId = c.PurchaseContractId
+          and c.PurchaseContractId not in (
+          select PurchaseContractId from PM_PurchaseContract where isinsidecompany='Y' and MainDeptId = SupplierId
+          )
       where DatePart(year, b.FINISHED_DATE) &lt;=#{year}
       group by a.ProjectId, c.ContractID
       ) totalcost on totalcost.ProjectId = mcp.MMProjectId and totalcost.ContractID = mcp.ContractId
