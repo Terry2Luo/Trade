@@ -49,7 +49,7 @@ public class MmProjectAnnualDailyExpensesController extends BaseController {
 	}
 
 	@RequestMapping(value="/pumsDayJob",method = RequestMethod.GET)
-	@ApiOperation(value="分包余额计算",notes="数据格式::：projectCode——经营项目编号（精确查询）")
+	@ApiOperation(value="生产经营日常任务执行")
 	public void	sendPost() throws Exception{
 		HttpRequestUtils.sendPost(everyDayJobUrl, roperties.getServerIp(), roperties.getServerPort(), roperties.getUserID(), roperties.getPassWord());
 

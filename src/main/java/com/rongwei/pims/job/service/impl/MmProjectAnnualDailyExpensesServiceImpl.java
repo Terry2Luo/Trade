@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -59,6 +60,7 @@ public class MmProjectAnnualDailyExpensesServiceImpl
     }
 
     @Override
+    @Transactional
     public void calcPrjPurchaseAmount(Integer year, String projectCode){
         Calendar start = Calendar.getInstance();
         Boolean isUpdateRemainPruchase = false;
@@ -112,10 +114,14 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                     //有到款，无项目营业额时，年度日常费用按照50%计算；分包余额为50%；
                     if(dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() ==0
                     ){
-                        dailyExpensesVO.setDailycostamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(1-NO_REVENUE_RATIO)),dailyExpensesVO.getTotaldailycostamount() ));
-                        dailyExpensesVO.setAnnualpurchaseremaindamount(
-                                BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().subtract(dailyExpensesVO.getDailycostamount()),dailyExpensesVO.getTotaldailycostamount())
+                        dailyExpensesVO.setDailycostamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(1-NO_REVENUE_RATIO)),dailyExpensesVO.getPredailycostamount() ));
+
+                        dailyExpensesVO.setAnnualpurchaseremaindamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(NO_REVENUE_RATIO)),dailyExpensesVO.getTotaldailycostamount() )
                         );
+
+//                        if("YS-JY-2019-246".equals(dailyExpensesVO.getMmprojectcode())){
+//                            logger.info(dailyExpensesVO.getAnnualpurchaseremaindamount().doubleValue()+"");
+//                        }
                         insertList.add(dailyExpensesVO);
 
                         //合同项目的分包资金余额

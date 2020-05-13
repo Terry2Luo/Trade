@@ -115,18 +115,20 @@
       </if>
   </delete>
 
-    <insert id="insertBatch" parameterType="java.util.List">
+    <insert id="insertBatch">
         INSERT INTO MM_Project_Annual_Daily_Expenses
-        (projectid, contractid, RevenusAmount, TotalRevenusAmount, PurchaseCostAmount
-        , TotalPurchaseCostAmount, ReceiveMoneyAmount, TotalReceiveMoneyAmount, DailyCostAmount,TotalDailyCostAmount
-        , insertTime,Year, paidMoneyAmount,totalpaidMoneyAmount, AnnualPurchaseRemaindAmount
-        , MMProjectCode)
+        (projectid, contractid, RevenusAmount, TotalRevenusAmount
+        , PurchaseCostAmount, TotalPurchaseCostAmount, ReceiveMoneyAmount, TotalReceiveMoneyAmount
+        , DailyCostAmount,TotalDailyCostAmount , insertTime,Year
+        , paidMoneyAmount,totalpaidMoneyAmount, AnnualPurchaseRemaindAmount, MMProjectCode)
         VALUES
         <foreach collection ="list" item="item" index= "index" separator =",">
             (
-            #{item.projectid},   #{item.contractid}, #{item.revenusamount}, #{item.totalrevenusamount}, #{item.purchasecostamount}
-            , #{item.totalpurchasecostamount}, #{item.receivemoneyamount},#{item.totalreceivemoneyamount}, #{item.dailycostamount}, #{item.totaldailycostamount},
-            #{item.inserttime}, #{item.year},#{item.paidmoneyamount},#{item.totalpaidmoneyamount},#{item.annualpurchaseremaindamount}
+            #{item.projectid},   #{item.contractid}, #{item.revenusamount}, #{item.totalrevenusamount}
+            , #{item.purchasecostamount} , #{item.totalpurchasecostamount}, #{item.receivemoneyamount},#{item.totalreceivemoneyamount}, #{item.dailycostamount}, #{item.totaldailycostamount},
+            #{item.inserttime}, #{item.year},#{item.paidmoneyamount}
+            ,#{item.totalpaidmoneyamount}
+            ,cast(#{item.annualpurchaseremaindamount,jdbcType=DECIMAL} as decimal(20,6))
             , #{item.mmprojectcode}
             )
         </foreach >
