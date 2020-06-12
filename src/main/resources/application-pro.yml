@@ -8,16 +8,10 @@ logging:
     com.anyo.ems: debug
 spring:
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driverClassName: com.mysql.jdbc.Driver
-
-    url: jdbc:sqlserver://192.168.0.194:1533;DatabaseName=EOS_PDIWT_20200403
-    username: root
-    password: root
-
-#    url: jdbc:mysql://172.16.1.10:3306/aj_api?useUnicode=true&characterEncoding=utf8
-#    username: root
-#    password: pOpUwsQg9z.6
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://10.17.52.11:1433;DatabaseName=EOS_PDIET_F
+    username: sa
+    password: pdiwt.2010
 
     initialSize: 1
     minIdle: 3
@@ -41,4 +35,9 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     # 合并多个DruidDataSource的监控数据
     #useGlobalDataSourceStat: true
-
+job:
+  pims:
+    serverIp: 127.0.0.1
+    serverPort: 8080
+    passWord: 000000
+    userID: luxing
