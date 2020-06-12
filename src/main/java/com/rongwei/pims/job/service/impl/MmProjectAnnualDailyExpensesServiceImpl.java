@@ -35,7 +35,7 @@ public class MmProjectAnnualDailyExpensesServiceImpl
         marketStatus.add(10);
     }
     //无收入的分包比例
-    private static Double NO_REVENUE_RATIO =  0.5d;
+    private static Double NO_REVENUE_RATIO =  0.95d;
     //到款大于收入的日常比例
     private static Double MORE_RECEIVED_RATIO =  0.05d;
 
@@ -111,17 +111,13 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                             contractProjectList.clear();
                         }
                     }
-                    //有到款，无项目营业额时，年度日常费用按照50%计算；分包余额为50%；
+                    //有到款，无项目营业额时，年度日常费用按照5%计算；分包余额为95%；
                     if(dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() ==0
                     ){
                         dailyExpensesVO.setDailycostamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(1-NO_REVENUE_RATIO)),dailyExpensesVO.getPredailycostamount() ));
 
                         dailyExpensesVO.setAnnualpurchaseremaindamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(NO_REVENUE_RATIO)),dailyExpensesVO.getTotaldailycostamount() )
                         );
-
-//                        if("YS-JY-2019-246".equals(dailyExpensesVO.getMmprojectcode())){
-//                            logger.info(dailyExpensesVO.getAnnualpurchaseremaindamount().doubleValue()+"");
-//                        }
                         insertList.add(dailyExpensesVO);
 
                         //合同项目的分包资金余额
@@ -139,9 +135,13 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                         //超额到款部门的日常费用
                         BigDecimal dailycostByReceive = BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount(),dailyExpensesVO.getTotalrevenusamount())
                                 .multiply(new BigDecimal(MORE_RECEIVED_RATIO));
-                        dailyExpensesVO.setDailycostamount(BigDecimalUtil.doAdd(dailycostByRevenue, dailycostByReceive));
+                        BigDecimal dailycostamount = BigDecimalUtil.doAdd(dailycostByRevenue, dailycostByReceive);
+                        dailyExpensesVO.setDailycostamount(dailycostamount);
 
-                        BigDecimal annualpurchaseremaindamount = BigDecimalUtil.doSub(dailyExpensesVO.getTotalpurchasecostamount(),dailyExpensesVO.getTotalpaidmoneyamount());
+                        //分包余额 = 到款-付款-累计日常费用
+                        BigDecimal annualpurchaseremaindamount = BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount(),dailyExpensesVO.getTotalpaidmoneyamount());
+                        annualpurchaseremaindamount = BigDecimalUtil.doSub(annualpurchaseremaindamount,dailyExpensesVO.getPredailycostamount());
+                        annualpurchaseremaindamount = BigDecimalUtil.doSub(annualpurchaseremaindamount, dailycostamount);
                         dailyExpensesVO.setAnnualpurchaseremaindamount(annualpurchaseremaindamount);
                         insertList.add(dailyExpensesVO);
 
