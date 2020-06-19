@@ -90,7 +90,7 @@
       group by a.ProjectId, a.ContractID
       ) predailycost on predailycost.ProjectId = mcp.MMProjectId and predailycost.ContractID = mcp.ContractId
     <where>
-        1=1
+        mm.attend_mimic_corporative ='Y'
         <if test="projectCode != null  "> and mm.projectCode = #{projectCode} </if>
         <if test="marketStatus != null  ">and mm.MarketStatus in
             <foreach collection="marketStatus" index="index" item="item" open="(" separator="," close=")">

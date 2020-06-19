@@ -201,10 +201,10 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                     //
 
                     insertList.add(dailyExpensesVO);
-                    //只更新当年的分包资金余额
-                    if(isUpdateRemainPruchase){
-                        contractProjectList = doPopulateContractProject(contractProjectList,dailyExpensesVO);
-                    }
+                    //只更新当年的分包资金余额 合同项目里面的分包余额废弃 鲁兴 2020-06-19
+//                    if(isUpdateRemainPruchase){
+//                        contractProjectList = doPopulateContractProject(contractProjectList,dailyExpensesVO);
+//                    }
                     //projectAnnualDailyExpensesSubMapper.insert(dailyExpensesVO);
                 }catch (Exception e){
                     logger.error("projectcode:     "+dailyExpensesVO.getMmprojectcode());
