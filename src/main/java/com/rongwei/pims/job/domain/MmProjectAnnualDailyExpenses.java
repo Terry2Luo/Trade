@@ -148,6 +148,11 @@ public class MmProjectAnnualDailyExpenses implements Serializable {
      * @mbg.generated Wed Apr 15 14:34:01 CST 2020
      */
     private BigDecimal annualpurchaseremaindamount;
+    private BigDecimal lastannualpurchaseremaindamount;
+
+    private BigDecimal annualaddpurchaseremaindamount;
+
+    //annualaddpurchaseremaindamount
 
     /**
      *
@@ -548,6 +553,24 @@ public class MmProjectAnnualDailyExpenses implements Serializable {
      */
     public void setAnnualpurchaseremaindamount(BigDecimal annualpurchaseremaindamount) {
         this.annualpurchaseremaindamount = annualpurchaseremaindamount;
+    }
+
+    public BigDecimal getLastannualpurchaseremaindamount() {
+        return lastannualpurchaseremaindamount;
+    }
+
+
+    public void setLastannualpurchaseremaindamount(BigDecimal lastannualpurchaseremaindamount) {
+        this.lastannualpurchaseremaindamount = lastannualpurchaseremaindamount;
+    }
+
+    public BigDecimal getAnnualaddpurchaseremaindamount() {
+        return annualaddpurchaseremaindamount;
+    }
+
+
+    public void setAnnualaddpurchaseremaindamount(BigDecimal annualaddpurchaseremaindamount) {
+        this.annualaddpurchaseremaindamount = annualaddpurchaseremaindamount;
     }
 
     /**

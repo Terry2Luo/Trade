@@ -8,32 +8,33 @@
       ,revenus.revenusamount,  totalrevenus.totalrevenusamount
       ,paid.paidmoneyamount,  totalpaid.totalpaidmoneyamount
       ,cost.purchasecostamount,  totalcost.totalpurchasecostamount
+      ,lastYearPurchaseRemaindAmount.lastannualpurchaseremaindamount
       ,predailycost.predailycostamount
       from MM_Project mm JOIN MM_ContractProjectSplit mcp on mm.projectid = mcp.MMProjectId
       join MM_contract con on con.contractid = mcp.contractid and con.contractcode is not null
       left join (
-      select cps.MMProjectId, col.ContractId, sum(SplitMoney) 'receivemoneyamount' from MM_Collection col
-      JOIN  MM_CollectionPrjSplit cps on cps.CollectionId = col.CollectionId
-      where DatePart(year, col.CollectDate) =#{year}
-      group by cps.MMProjectId, col.ContractId
+          select cps.MMProjectId, col.ContractId, sum(SplitMoney) 'receivemoneyamount' from MM_Collection col
+          JOIN  MM_CollectionPrjSplit cps on cps.CollectionId = col.CollectionId
+          where DatePart(year, col.CollectDate) =#{year}
+          group by cps.MMProjectId, col.ContractId
       ) collMoney on collMoney.MMProjectId = mcp.MMProjectId and collMoney.ContractId = mcp.ContractId
       left join (
-      select cps.MMProjectId, col.ContractId, sum(SplitMoney) 'totalreceivemoneyamount' from MM_Collection col
-      JOIN  MM_CollectionPrjSplit cps on cps.CollectionId = col.CollectionId
-      where DatePart(year, col.CollectDate) &lt;=#{year}
-      group by cps.MMProjectId, col.ContractId
+          select cps.MMProjectId, col.ContractId, sum(SplitMoney) 'totalreceivemoneyamount' from MM_Collection col
+          JOIN  MM_CollectionPrjSplit cps on cps.CollectionId = col.CollectionId
+          where DatePart(year, col.CollectDate) &lt;=#{year}
+          group by cps.MMProjectId, col.ContractId
       ) totalcollMoney on totalcollMoney.MMProjectId = mcp.MMProjectId and totalcollMoney.ContractId = mcp.ContractId
 
       left join (
-      select a.MM_PROJECT_ID, a.CONTRACT_ID, sum(REVENUE_AMOUNT) 'revenusamount' from MM_CONTRACT_REVENUE_PRJ a
-      where DatePart(year, a.FINISHED_DATE) =#{year}
-      group by a.MM_PROJECT_ID, a.CONTRACT_ID
+          select a.MM_PROJECT_ID, a.CONTRACT_ID, sum(REVENUE_AMOUNT) 'revenusamount' from MM_CONTRACT_REVENUE_PRJ a
+          where DatePart(year, a.FINISHED_DATE) =#{year}
+          group by a.MM_PROJECT_ID, a.CONTRACT_ID
       ) revenus on revenus.MM_PROJECT_ID = mcp.MMProjectId and revenus.CONTRACT_ID = mcp.ContractId
 
       left join (
-      select a.MM_PROJECT_ID, a.CONTRACT_ID, sum(REVENUE_AMOUNT) 'totalrevenusamount' from MM_CONTRACT_REVENUE_PRJ a
-      where DatePart(year, a.FINISHED_DATE) &lt;=#{year}
-      group by a.MM_PROJECT_ID, a.CONTRACT_ID
+          select a.MM_PROJECT_ID, a.CONTRACT_ID, sum(REVENUE_AMOUNT) 'totalrevenusamount' from MM_CONTRACT_REVENUE_PRJ a
+          where DatePart(year, a.FINISHED_DATE) &lt;=#{year}
+          group by a.MM_PROJECT_ID, a.CONTRACT_ID
       ) totalrevenus on totalrevenus.MM_PROJECT_ID = mcp.MMProjectId and totalrevenus.CONTRACT_ID = mcp.ContractId
 
       left join (
@@ -89,6 +90,13 @@
       where Year &lt; #{year}
       group by a.ProjectId, a.ContractID
       ) predailycost on predailycost.ProjectId = mcp.MMProjectId and predailycost.ContractID = mcp.ContractId
+
+      left join (
+      select a.ProjectId, a.ContractID, (a.AnnualPurchaseRemaindAmount) 'lastannualpurchaseremaindamount' from MM_Project_Annual_Daily_Expenses a
+      where Year = #{lastYear}
+      ) lastYearPurchaseRemaindAmount on lastYearPurchaseRemaindAmount.ProjectId = mcp.MMProjectId and lastYearPurchaseRemaindAmount.ContractID = mcp.ContractId
+
+
     <where>
         mm.attend_mimic_corporative ='Y'
         <if test="projectCode != null  "> and mm.projectCode = #{projectCode} </if>
@@ -120,7 +128,7 @@
         (projectid, contractid, RevenusAmount, TotalRevenusAmount
         , PurchaseCostAmount, TotalPurchaseCostAmount, ReceiveMoneyAmount, TotalReceiveMoneyAmount
         , DailyCostAmount,TotalDailyCostAmount , insertTime,Year
-        , paidMoneyAmount,totalpaidMoneyAmount, AnnualPurchaseRemaindAmount, MMProjectCode)
+        , paidMoneyAmount,totalpaidMoneyAmount, AnnualPurchaseRemaindAmount,LastAnnualPurchaseRemaindAmount, AnnualAddPurchaseRemaindAmount, MMProjectCode)
         VALUES
         <foreach collection ="list" item="item" index= "index" separator =",">
             (
@@ -129,6 +137,8 @@
             #{item.inserttime}, #{item.year},#{item.paidmoneyamount}
             ,#{item.totalpaidmoneyamount}
             ,cast(#{item.annualpurchaseremaindamount,jdbcType=DECIMAL} as decimal(20,6))
+            ,cast(#{item.lastannualpurchaseremaindamount,jdbcType=DECIMAL} as decimal(20,6))
+            ,cast(#{item.annualaddpurchaseremaindamount,jdbcType=DECIMAL} as decimal(20,6))
             , #{item.mmprojectcode}
             )
         </foreach >

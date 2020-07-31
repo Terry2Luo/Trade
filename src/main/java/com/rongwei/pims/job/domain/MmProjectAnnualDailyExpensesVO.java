@@ -12,6 +12,8 @@ public class MmProjectAnnualDailyExpensesVO  extends MmProjectAnnualDailyExpense
     private BigDecimal predailycostamount;
     //合同项目数据主键ID
     private Integer contractprojectsplitid;
+    //
+
 
 
 }

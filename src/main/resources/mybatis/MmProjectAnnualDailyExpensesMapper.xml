@@ -23,6 +23,7 @@
     <result column="paidMoneyAmount" jdbcType="DECIMAL" property="paidmoneyamount" />
     <result column="totalpaidMoneyAmount" jdbcType="DECIMAL" property="totalpaidmoneyamount" />
     <result column="AnnualPurchaseRemaindAmount" jdbcType="DECIMAL" property="annualpurchaseremaindamount" />
+    <result column="AnnualAddPurchaseRemaindAmount" jdbcType="DECIMAL" property="annualaddpurchaseremaindamount" />
     <result column="MMProjectCode" jdbcType="NVARCHAR" property="mmprojectcode" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -68,7 +69,7 @@
       ReceiveMoneyAmount, TotalReceiveMoneyAmount, 
       DailyCostAmount, TotalDailyCostAmount, 
       insertTime, Year, paidMoneyAmount, 
-      totalpaidMoneyAmount, AnnualPurchaseRemaindAmount, 
+      totalpaidMoneyAmount, AnnualPurchaseRemaindAmount, AnnualAddPurchaseRemaindAmount,
       MMProjectCode)
     values (#{projectannualdailyexpensesid,jdbcType=INTEGER}, #{projectid,jdbcType=INTEGER}, 
       #{contractid,jdbcType=INTEGER}, #{revenusamount,jdbcType=DECIMAL}, #{totalrevenusamount,jdbcType=DECIMAL}, 
@@ -76,8 +77,9 @@
       #{receivemoneyamount,jdbcType=DECIMAL}, #{totalreceivemoneyamount,jdbcType=DECIMAL}, 
       #{dailycostamount,jdbcType=DECIMAL}, #{totaldailycostamount,jdbcType=DECIMAL}, 
       #{inserttime,jdbcType=TIMESTAMP}, #{year,jdbcType=INTEGER}, #{paidmoneyamount,jdbcType=DECIMAL}, 
-      #{totalpaidmoneyamount,jdbcType=DECIMAL}, #{annualpurchaseremaindamount,jdbcType=DECIMAL}, 
-      #{mmprojectcode,jdbcType=NVARCHAR})
+      #{totalpaidmoneyamount,jdbcType=DECIMAL}, #{annualpurchaseremaindamount,jdbcType=DECIMAL},
+      #{annualaddpurchaseremaindamount,jdbcType=DECIMAL},
+    #{mmprojectcode,jdbcType=NVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.rongwei.pims.job.domain.MmProjectAnnualDailyExpenses">
     <!--
@@ -135,6 +137,9 @@
       <if test="annualpurchaseremaindamount != null">
         AnnualPurchaseRemaindAmount,
       </if>
+      <if test="annualaddpurchaseremaindamount != null">
+        AnnualAddPurchaseRemaindAmount,
+      </if>
       <if test="mmprojectcode != null">
         MMProjectCode,
       </if>
@@ -187,6 +192,9 @@
       </if>
       <if test="annualpurchaseremaindamount != null">
         #{annualpurchaseremaindamount,jdbcType=DECIMAL},
+      </if>
+      <if test="annualaddpurchaseremaindamount != null">
+        #{annualaddpurchaseremaindamount,jdbcType=DECIMAL},
       </if>
       <if test="mmprojectcode != null">
         #{mmprojectcode,jdbcType=NVARCHAR},
@@ -245,6 +253,9 @@
       </if>
       <if test="annualpurchaseremaindamount != null">
         AnnualPurchaseRemaindAmount = #{annualpurchaseremaindamount,jdbcType=DECIMAL},
+      </if>
+      <if test="annualaddpurchaseremaindamount != null">
+        AnnualAddPurchaseRemaindAmount = #{annualaddpurchaseremaindamount,jdbcType=DECIMAL},
       </if>
       <if test="mmprojectcode != null">
         MMProjectCode = #{mmprojectcode,jdbcType=NVARCHAR},

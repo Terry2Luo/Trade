@@ -69,6 +69,8 @@ public class MmProjectAnnualDailyExpensesServiceImpl
         }
         Map<String, Object> map = new HashMap<>();
         map.put("year", year);
+        map.put("lastYear", year-1);
+
         //制定项目编号时，无需项目状态限制
         if(projectCode != null && !projectCode.equals("")){
             map.put("projectCode", projectCode);
@@ -104,28 +106,22 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                         //重置list数据为空，count ==1
                         insertList.clear();
                         count = 0;
-                        //只更新当年的分包资金余额
-                        if(isUpdateRemainPruchase){
-                            contractProjectService.updateBatch(contractProjectList);
-                            //重置list数据为空
-                            contractProjectList.clear();
-                        }
                     }
                     //有到款，无项目营业额时，年度日常费用按照5%计算；分包余额为95%；
-                    if(dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() ==0
-                    ){
-                        dailyExpensesVO.setDailycostamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(1-NO_REVENUE_RATIO)),dailyExpensesVO.getPredailycostamount() ));
+                    if(dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() ==0 ){
+                        BigDecimal annualpurchaseremaindamount = new BigDecimal(0);
+                        annualpurchaseremaindamount = dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(NO_REVENUE_RATIO));
+                        //减去付款
+                        annualpurchaseremaindamount = BigDecimalUtil.doSub(annualpurchaseremaindamount,dailyExpensesVO.getTotalpaidmoneyamount());
+                        dailyExpensesVO.setAnnualpurchaseremaindamount(annualpurchaseremaindamount);
 
-                        dailyExpensesVO.setAnnualpurchaseremaindamount(BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount().multiply(new BigDecimal(NO_REVENUE_RATIO)),dailyExpensesVO.getTotaldailycostamount() )
-                        );
-                        insertList.add(dailyExpensesVO);
+                        BigDecimal dailycostamount = new BigDecimal(0);
+                        dailycostamount = BigDecimalUtil.doSub(dailyExpensesVO.getTotalreceivemoneyamount(),annualpurchaseremaindamount );
+                        dailycostamount = BigDecimalUtil.doSub(dailycostamount, dailyExpensesVO.getTotalpaidmoneyamount());
+                        dailyExpensesVO.setDailycostamount(dailycostamount);
 
-                        //合同项目的分包资金余额
-                        if(isUpdateRemainPruchase){
-                            contractProjectList = doPopulateContractProject(contractProjectList,dailyExpensesVO);
-                        }
-                        continue;
-                    }
+
+                    } else
                     //但项目到款＞项目营业额的，超额部分的95%按照分包资金余额计算，超额部分的5%计入部门的日常费用
                     if(dailyExpensesVO.getTotalrevenusamount().doubleValue() < dailyExpensesVO.getTotalreceivemoneyamount().doubleValue()
                     ){
@@ -143,82 +139,73 @@ public class MmProjectAnnualDailyExpensesServiceImpl
                         annualpurchaseremaindamount = BigDecimalUtil.doSub(annualpurchaseremaindamount,dailyExpensesVO.getPredailycostamount());
                         annualpurchaseremaindamount = BigDecimalUtil.doSub(annualpurchaseremaindamount, dailycostamount);
                         dailyExpensesVO.setAnnualpurchaseremaindamount(annualpurchaseremaindamount);
-                        insertList.add(dailyExpensesVO);
 
-                        //合同项目的分包资金余额
-                        if(isUpdateRemainPruchase){
-                            contractProjectList = doPopulateContractProject(contractProjectList,dailyExpensesVO);
+                    } else {
+
+                        //历年已使用日常资金
+                        BigDecimal predailycostamount = new BigDecimal(0);
+                        if (dailyExpensesVO.getPredailycostamount() != null) {
+                            predailycostamount = dailyExpensesVO.getPredailycostamount();
                         }
-                        continue;
-                    }
+                        //已付款金额
+                        BigDecimal totalpaidmoneyamount = new BigDecimal(0);
+                        if (dailyExpensesVO.getTotalpaidmoneyamount() != null) {
+                            totalpaidmoneyamount = dailyExpensesVO.getTotalpaidmoneyamount();
+                        }
 
-                    //历年已使用日常资金
-                    BigDecimal predailycostamount = new BigDecimal(0);
-                    if(dailyExpensesVO.getPredailycostamount() != null ){
-                        predailycostamount = dailyExpensesVO.getPredailycostamount();
-                    }
-                    //已付款金额
-                    BigDecimal totalpaidmoneyamount = new BigDecimal(0);
-                    if(dailyExpensesVO.getTotalpaidmoneyamount() != null ){
-                        totalpaidmoneyamount = dailyExpensesVO.getTotalpaidmoneyamount();
-                    }
+                        //年度剩余分包资金
+                        BigDecimal annualpurchaseremaindamount = new BigDecimal(0);
+                        if (dailyExpensesVO.getAnnualpurchaseremaindamount() != null) {
+                            annualpurchaseremaindamount = dailyExpensesVO.getAnnualpurchaseremaindamount();
+                        }
 
-                    //年度剩余分包资金
-                    BigDecimal annualpurchaseremaindamount = new BigDecimal(0);
-                    if(dailyExpensesVO.getAnnualpurchaseremaindamount() != null ){
-                        annualpurchaseremaindamount = dailyExpensesVO.getAnnualpurchaseremaindamount();
-                    }
+                        //已付款金额+已使用日常费用 > 已收款金额时；剩余分包资金为0
 
-                    //已付款金额+已使用日常费用 > 已收款金额时；剩余分包资金为0
-//                    if(BigDecimalUtil.doAdd(predailycostamount, totalpaidmoneyamount).compareTo(dailyExpensesVO.getTotalreceivemoneyamount()) == 1
-//                    ){
-//                        dailyExpensesVO.setAnnualpurchaseremaindamount(new BigDecimal(0));
-//                    }else{
                         //无收入时，分包余额为0
-                        if(dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() ==0
-                                ||dailyExpensesVO.getTotalpurchasecostamount() == null || dailyExpensesVO.getTotalpurchasecostamount().doubleValue() ==0
-                        ){
+                        if (dailyExpensesVO.getTotalrevenusamount() == null || dailyExpensesVO.getTotalrevenusamount().doubleValue() == 0
+                                || dailyExpensesVO.getTotalpurchasecostamount() == null || dailyExpensesVO.getTotalpurchasecostamount().doubleValue() == 0
+                        ) {
                             annualpurchaseremaindamount = new BigDecimal(0);
-                        }else{
+                        } else {
                             //分包余额=Σ项目到款×（项目累计分包产值/项目累计项目营业额）-项目累计付款
                             annualpurchaseremaindamount = dailyExpensesVO.getTotalreceivemoneyamount()
                                     .multiply(dailyExpensesVO.getTotalpurchasecostamount()) // getTotalpurchasecostamount
-                                    .divide(dailyExpensesVO.getTotalrevenusamount(),6, BigDecimal.ROUND_HALF_UP)
+                                    .divide(dailyExpensesVO.getTotalrevenusamount(), 6, BigDecimal.ROUND_HALF_UP)
                                     .subtract(totalpaidmoneyamount);
-//                            if(annualpurchaseremaindamount.doubleValue() < 0){
-//                                annualpurchaseremaindamount = new BigDecimal(0);
-//                            }
                         }
 
                         dailyExpensesVO.setAnnualpurchaseremaindamount(annualpurchaseremaindamount);
 //                    }
-                    //年度日常费用 = 项目到款（累计值）- 历年日常费用 – 已付款-年度分包余额
-                    dailyExpensesVO.setDailycostamount(dailyExpensesVO.getTotalreceivemoneyamount()
-                            .subtract(totalpaidmoneyamount)
-                            .subtract(predailycostamount)
-                            .subtract(annualpurchaseremaindamount)
-                    );
-                    //
-
-                    insertList.add(dailyExpensesVO);
-                    //只更新当年的分包资金余额 合同项目里面的分包余额废弃 鲁兴 2020-06-19
-//                    if(isUpdateRemainPruchase){
-//                        contractProjectList = doPopulateContractProject(contractProjectList,dailyExpensesVO);
-//                    }
-                    //projectAnnualDailyExpensesSubMapper.insert(dailyExpensesVO);
+                        //年度日常费用 = 项目到款（累计值）- 历年日常费用 – 已付款-年度分包余额
+                        dailyExpensesVO.setDailycostamount(dailyExpensesVO.getTotalreceivemoneyamount()
+                                .subtract(totalpaidmoneyamount)
+                                .subtract(predailycostamount)
+                                .subtract(annualpurchaseremaindamount)
+                        );
+                    }
                 }catch (Exception e){
                     logger.error("projectcode:     "+dailyExpensesVO.getMmprojectcode());
                     logger.error(e.getMessage());
                 }
+
+                //当年新增分包余额 年度新增分包预留资金=分包余额-上年分包余额+年度付款
+                BigDecimal annualaddpurchaseremaindamount = new BigDecimal(0);
+
+                annualaddpurchaseremaindamount = BigDecimalUtil.doSub(dailyExpensesVO.getAnnualpurchaseremaindamount() , dailyExpensesVO.getLastannualpurchaseremaindamount());
+                // -上年分包预留资金-年度付款
+                // annualaddpurchaseremaindamount = BigDecimalUtil.doSub(annualaddpurchaseremaindamount, dailyExpensesVO.getLastannualpurchaseremaindamount());
+                annualaddpurchaseremaindamount = BigDecimalUtil.doAdd(annualaddpurchaseremaindamount, dailyExpensesVO.getPaidmoneyamount());
+                dailyExpensesVO.setAnnualaddpurchaseremaindamount(annualaddpurchaseremaindamount);
+                insertList.add(dailyExpensesVO);
             }
 
             if(insertList != null && insertList.size() > 0){
                 this.insertBatch(insertList);
             }
-            //分包资金余额更新
-            if(contractProjectList != null && contractProjectList.size() > 0){
-                contractProjectService.updateBatch(contractProjectList);
-            }
+//            //分包资金余额更新
+//            if(contractProjectList != null && contractProjectList.size() > 0){
+//                contractProjectService.updateBatch(contractProjectList);
+//            }
         }
 
         Calendar end = Calendar.getInstance();
