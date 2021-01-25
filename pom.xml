@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.rongwei.pims</groupId>
-    <artifactId>job</artifactId>
+    <artifactId>trade</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>job</name>
     <description>Demo project for Spring Boot</description>
@@ -64,11 +64,31 @@
             </exclusions>
         </dependency>
 
-        <!-- DB start-->
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.6.2</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>junit</groupId>-->
+            <!--<artifactId>junit</artifactId>-->
+            <!--<version>4.12</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
+        <!-- DB start-->
+        <!--<dependency>-->
+            <!--<groupId>com.microsoft.sqlserver</groupId>-->
+            <!--<artifactId>mssql-jdbc</artifactId>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
         <dependency>
@@ -152,6 +172,8 @@
             <!--<artifactId>httpclient</artifactId>-->
             <!--<version>4.4</version>-->
         <!--</dependency>-->
+
+
 
 
 

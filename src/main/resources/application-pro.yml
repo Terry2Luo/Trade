@@ -8,10 +8,13 @@ logging:
     com.anyo.ems: debug
 spring:
   datasource:
-    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://10.17.52.11:1433;DatabaseName=EOS_PDIET_F
-    username: sa
-    password: pdiwt.2010
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://58.40.141.26:3307/ems-api?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    #url: jdbc:mysql://58.40.141.26:3307/ems-api_20201014?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+
+    username: root
+    password: 2wsx#EDC
 
     initialSize: 1
     minIdle: 3

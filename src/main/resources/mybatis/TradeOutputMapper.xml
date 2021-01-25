@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rongwei.pims.job.trade.dao.TradeOutputDao">
+	<select id="list" resultType="com.rongwei.pims.job.trade.domain.TradeOutputDO">
+		select a.TRANSACTION_OUTPUT_ID,a.SECURITY_CODE,a.QUANTITY from trade_output a
+		<where>
+			1 = 1
+			<if test="transactionOutputId != null and transactionOutputId != ''"> and a.TRANSACTION_OUTPUT_ID = #{transactionOutputId} </if>
+			<if test="securityCode != null and securityCode != ''"> and a.SECURITY_CODE = #{securityCode} </if>
+			<if test="quantity != null and quantity != ''"> and a.QUANTITY = #{quantity} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by a.TRANSACTION_OUTPUT_ID desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<insert id="save" parameterType="com.rongwei.pims.job.trade.domain.TradeOutputDO" >
+		insert into trade_output
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="transactionOutputId != null">`TRANSACTION_OUTPUT_ID`, </if>
+			<if test="securityCode != null">`SECURITY_CODE`, </if>
+			<if test="quantity != null">`QUANTITY`</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="transactionOutputId != null">#{transactionOutputId}, </if>
+			<if test="securityCode != null">#{securityCode}, </if>
+			<if test="quantity != null">#{quantity}</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteByCodes">
+		delete from trade_output  where  security_Code  in
+		<foreach item="securityCode" collection="calSecurityCode"  open="(" separator="," close=")">
+			#{securityCode}
+		</foreach>
+	</delete>
+
+	<insert id="batchSave" parameterType="java.util.List" >
+		insert into trade_output
+		(SECURITY_CODE,   QUANTITY  		)
+		values
+		<foreach collection ="list" item="item" index= "index" separator =",">
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+				#{item.securityCode},   #{item.quantity}
+			</trim>
+		</foreach >
+
+	</insert>
+
+
+
+
+</mapper>

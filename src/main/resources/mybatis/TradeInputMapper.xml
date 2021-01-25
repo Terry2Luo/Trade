@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rongwei.pims.job.trade.dao.TradeInputDao">
+
+	<select id="list" resultType="com.rongwei.pims.job.trade.domain.TradeInputDO">
+		select a.TRADE_INPUT_ID,a.TRANSCATION_ID,a.TRADE_ID,a.VERSION,a.SECURITY_CODE,a.QUANTITY,a.OPERATION_TYPE,a.SELL_TYPE,a.OPERATION_DATE,a.IS_VALID,a.REAL_QUANTITY from trade_input a
+		<where>
+			1 = 1
+			<if test="tradeInputId != null and tradeInputId != ''"> and a.TRADE_INPUT_ID = #{tradeInputId} </if>
+			<if test="transcationId != null and transcationId != ''"> and a.TRANSCATION_ID = #{transcationId} </if>
+			<if test="tradeId != null and tradeId != ''"> and a.TRADE_ID = #{tradeId} </if>
+			<if test="version != null and version != ''"> and a.VERSION = #{version} </if>
+			<if test="securityCode != null and securityCode != ''"> and a.SECURITY_CODE = #{securityCode} </if>
+			<if test="quantity != null and quantity != ''"> and a.QUANTITY = #{quantity} </if>
+			<if test="operationType != null and operationType != ''"> and a.OPERATION_TYPE = #{operationType} </if>
+			<if test="sellType != null and sellType != ''"> and a.SELL_TYPE = #{sellType} </if>
+			<if test="operationDate != null and operationDate != ''"> and a.OPERATION_DATE = #{operationDate} </if>
+			<if test="isValid != null and isValid != ''"> and a.IS_VALID = #{isValid} </if>
+			<if test="realQuantity != null and realQuantity != ''"> and a.REAL_QUANTITY = #{realQuantity} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by a.TRADE_INPUT_ID desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<insert id="save" parameterType="com.rongwei.pims.job.trade.domain.TradeInputDO" >
+		insert into trade_input
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="tradeInputId != null">`TRADE_INPUT_ID`, </if>
+			<if test="transcationId != null">`TRANSCATION_ID`, </if>
+			<if test="tradeId != null">`TRADE_ID`, </if>
+			<if test="version != null">`VERSION`, </if>
+			<if test="securityCode != null">`SECURITY_CODE`, </if>
+			<if test="quantity != null">`QUANTITY`, </if>
+			<if test="operationType != null">`OPERATION_TYPE`, </if>
+			<if test="sellType != null">`SELL_TYPE`, </if>
+			<if test="operationDate != null">`OPERATION_DATE`, </if>
+			<if test="isValid != null">`IS_VALID`, </if>
+			<if test="realQuantity != null">`REAL_QUANTITY`</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="tradeInputId != null">#{tradeInputId}, </if>
+			<if test="transcationId != null">#{transcationId}, </if>
+			<if test="tradeId != null">#{tradeId}, </if>
+			<if test="version != null">#{version}, </if>
+			<if test="securityCode != null">#{securityCode}, </if>
+			<if test="quantity != null">#{quantity}, </if>
+			<if test="operationType != null">#{operationType}, </if>
+			<if test="sellType != null">#{sellType}, </if>
+			<if test="operationDate != null">#{operationDate}, </if>
+			<if test="isValid != null">#{isValid}, </if>
+			<if test="realQuantity != null">#{realQuantity}</if>
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="com.rongwei.pims.job.trade.domain.TradeInputDO" >
+		update trade_input
+		<set>
+			<if test="transcationId != null">`TRANSCATION_ID` = #{transcationId}, </if>
+			<if test="tradeId != null">`TRADE_ID` = #{tradeId}, </if>
+			<if test="version != null">`VERSION` = #{version}, </if>
+			<if test="securityCode != null">`SECURITY_CODE` = #{securityCode}, </if>
+			<if test="quantity != null">`QUANTITY` = #{quantity}, </if>
+			<if test="operationType != null">`OPERATION_TYPE` = #{operationType}, </if>
+			<if test="sellType != null">`SELL_TYPE` = #{sellType}, </if>
+			<if test="operationDate != null">`OPERATION_DATE` = #{operationDate}, </if>
+			<if test="isValid != null">`IS_VALID` = #{isValid}, </if>
+			<if test="realQuantity != null">`REAL_QUANTITY` = #{realQuantity}</if>
+		</set>
+		where TRADE_INPUT_ID = #{tradeInputId}
+	</update>
+
+	<select id="listTotal" resultType="com.rongwei.pims.job.trade.domain.TradeInputDO">
+		select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code  in
+		<foreach item="securityCode" collection="calSecurityCode" open="(" separator="," close=")">
+			#{securityCode}
+		</foreach>
+		group by a.SECURITY_CODE
+	</select>
+
+    <delete id="deleteAll">
+        delete from trade_input;
+    </delete>
+
+
+</mapper>
