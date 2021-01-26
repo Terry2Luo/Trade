@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.alibaba.fastjson.JSONObject;
 import com.rongwei.pims.job.common.R;
 import com.rongwei.pims.job.trade.domain.TradeInputDO;
 import com.rongwei.pims.job.trade.service.TradeInputService;
@@ -35,11 +36,9 @@ public class TradeInputController {
 	@ResponseBody
 	@PostMapping("/save")
 	@ApiOperation(value = "证券头寸交易记录", notes = "证券头寸交易记录")
-	public R save(TradeInputDO tradeInput){
-		if(tradeInputService.saveData(tradeInput)>0){
-			return R.ok();
-		}
-		return R.error();
+	public JSONObject save(TradeInputDO tradeInput){
+		JSONObject json = tradeInputService.saveData(tradeInput);
+		return json;
 	}
 
 	

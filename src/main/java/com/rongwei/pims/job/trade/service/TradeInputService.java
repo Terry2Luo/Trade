@@ -2,6 +2,7 @@ package com.rongwei.pims.job.trade.service;
 
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.rongwei.pims.job.trade.domain.TradeInputDO;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface TradeInputService {
 	
 	int update(TradeInputDO tradeInput);
 
-	int saveData(TradeInputDO tradeInput);
+	JSONObject saveData(TradeInputDO tradeInput);
 
 	List<TradeInputDO> listTotal(Map<String, Object> map);
 

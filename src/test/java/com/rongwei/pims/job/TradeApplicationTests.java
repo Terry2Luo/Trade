@@ -43,11 +43,14 @@ class TradeApplicationTests {
     public void testInsertAndBuy() throws Exception {
         log.info("A");
         TradeInputDO tradeInputREL = new TradeInputDO(1, 1, 1, "REL", 50, "INSERT", "Buy");
-        tradeInputService.saveData(tradeInputREL);
+        JSONObject jsonREL = tradeInputService.saveData(tradeInputREL);
+        log.info("jsonREL",jsonREL);
         TradeInputDO tradeInputITC = new TradeInputDO(2, 2, 1, "ITC", 40, "INSERT", "Sell");
-        tradeInputService.saveData(tradeInputITC);
+        JSONObject jsonITC = tradeInputService.saveData(tradeInputITC);
+        log.info("jsonITC",jsonITC);
         TradeInputDO tradeInputINF = new TradeInputDO(3, 3, 1, "INF", 70, "INSERT", "Buy");
-        tradeInputService.saveData(tradeInputINF);
+        JSONObject jsonINF =  tradeInputService.saveData(tradeInputINF);
+        log.info("jsonINF",jsonINF);
         JSONObject json = tradeOutputService.listAll();
 
         assertEquals(json.getString("REL"), "50");
@@ -56,12 +59,14 @@ class TradeApplicationTests {
     }
 
 
+
+
     /**
      * 测试insertAndBuy的数据
      * @throws Exception
      */
     @Test
-    @Order(3)
+    @Order(5)
     public void testUpdateAndBuy() throws Exception {
         log.info("B");
         TradeInputDO tradeInputREL = new TradeInputDO(4, 1, 2, "REL", 60, "UPDATE", "Buy");
@@ -74,7 +79,7 @@ class TradeApplicationTests {
      * @throws Exception
      */
     @Test
-    @Order(4)
+    @Order(6)
     public void testCancelAndBuy() throws Exception {
         log.info("C");
         TradeInputDO tradeInputREL = new TradeInputDO(5, 2, 2, "ITC", 30, "CANCEL", "Buy");
@@ -88,13 +93,44 @@ class TradeApplicationTests {
      * @throws Exception
      */
     @Test
-    @Order(5)
+    @Order(7)
     public void testInsertAndSellByOthers() throws Exception {
         log.info("D");
         TradeInputDO tradeInputREL = new TradeInputDO(6, 4, 1, "INF", 20, "INSERT", "Sell");
         tradeInputService.saveData(tradeInputREL);
         JSONObject json = tradeOutputService.listAll();
         assertEquals(json.getString("INF"), "50");
+    }
+
+
+    /**
+     * 数据校验
+     * @throws Exception
+     */
+    @Test
+    @Order(21)
+    public void testInputDataValid() throws Exception {
+        log.info("testInputDataValid");
+        TradeInputDO tradeInputREL = new TradeInputDO(1, 1, 1, "REL", 50, "INSERT", "Buy");
+        JSONObject jsonREL = tradeInputService.saveData(tradeInputREL);
+        log.info("jsonREL",jsonREL);
+
+    }
+
+    /**
+     * 数据校验
+     * @throws Exception
+     */
+    @Test
+    @Order(22)
+    public void testInputDataValidNoExist() throws Exception {
+        log.info("testInputDataValid");
+        TradeInputDO tradeInputREL = new TradeInputDO(1, 5, 2, "REL", 50, "INSERT", "Buy");
+        JSONObject jsonREL = tradeInputService.saveData(tradeInputREL);
+        log.info("jsonREL",jsonREL);
+
+
+
     }
 
 
