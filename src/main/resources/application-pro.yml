@@ -10,11 +10,10 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://58.40.141.26:3307/ems-api?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    #url: jdbc:mysql://58.40.141.26:3307/ems-api_20201014?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3307/ems-api?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
 
-    username: root
-    password: 2wsx#EDC
+    username:
+    password:
 
     initialSize: 1
     minIdle: 3

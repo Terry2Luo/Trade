@@ -1,0 +1,145 @@
+2021-01-26 00:50:20 -Starting TradeApplicationTests on Terry with PID 15520 (started by Administrator in D:\IDEA\Trade)
+2021-01-26 00:50:20 -Running with Spring Boot v2.2.6.RELEASE, Spring v5.2.5.RELEASE
+2021-01-26 00:50:20 -The following profiles are active: dev
+2021-01-26 00:50:24 -Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2021-01-26 00:50:25 -Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-26 00:50:25 -Using default implementation for ThreadExecutor
+2021-01-26 00:50:25 -Initialized Scheduler Signaller of type: class org.quartz.core.SchedulerSignalerImpl
+2021-01-26 00:50:25 -Quartz Scheduler v.2.2.1 created.
+2021-01-26 00:50:25 -RAMJobStore initialized.
+2021-01-26 00:50:25 -Scheduler meta-data: Quartz Scheduler (v2.2.1) 'quartzScheduler' with instanceId 'NON_CLUSTERED'
+  Scheduler class: 'org.quartz.core.QuartzScheduler' - running locally.
+  NOT STARTED.
+  Currently in standby mode.
+  Number of jobs executed: 0
+  Using thread pool 'org.quartz.simpl.SimpleThreadPool' - with 10 threads.
+  Using job-store 'org.quartz.simpl.RAMJobStore' - which does not support persistence. and is not clustered.
+
+2021-01-26 00:50:25 -Quartz scheduler 'quartzScheduler' initialized from an externally provided properties instance.
+2021-01-26 00:50:25 -Quartz scheduler version: 2.2.1
+2021-01-26 00:50:25 -JobFactory set to: org.springframework.scheduling.quartz.SpringBeanJobFactory@7ea2412c
+2021-01-26 00:50:25 -Context refreshed
+2021-01-26 00:50:25 -Found 1 custom documentation plugin(s)
+2021-01-26 00:50:26 -Scanning for api listing references
+2021-01-26 00:50:26 -Starting Quartz Scheduler now
+2021-01-26 00:50:26 -Scheduler quartzScheduler_$_NON_CLUSTERED started.
+2021-01-26 00:50:26 -Started TradeApplicationTests in 7.055 seconds (JVM running for 9.249)
+2021-01-26 00:50:26 -{dataSource-1} inited
+2021-01-26 00:50:27 -==>  Preparing: delete from trade_input; 
+2021-01-26 00:50:27 -==> Parameters: 
+2021-01-26 00:50:27 -<==    Updates: 6
+2021-01-26 00:50:27 -A
+2021-01-26 00:50:27 -securityCodeOld
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_input ( `TRANSCATION_ID`, `TRADE_ID`, `VERSION`, `SECURITY_CODE`, `QUANTITY`, `OPERATION_TYPE`, `SELL_TYPE`, `OPERATION_DATE`, `IS_VALID`, `REAL_QUANTITY` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: 1(Integer), 1(Integer), 1(Integer), REL(String), 50(Integer), INSERT(String), Buy(String), 2021-01-26 00:50:27.302(Timestamp), Y(String), 50(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: delete from trade_output where security_Code in ( ? ) 
+2021-01-26 00:50:27 -==> Parameters: REL(String)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code in ( ? ) group by a.SECURITY_CODE 
+2021-01-26 00:50:27 -==> Parameters: REL(String)
+2021-01-26 00:50:27 -<==      Total: 1
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_output (SECURITY_CODE, QUANTITY ) values ( ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: REL(String), 50(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -securityCodeOld
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_input ( `TRANSCATION_ID`, `TRADE_ID`, `VERSION`, `SECURITY_CODE`, `QUANTITY`, `OPERATION_TYPE`, `SELL_TYPE`, `OPERATION_DATE`, `IS_VALID`, `REAL_QUANTITY` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: 2(Integer), 2(Integer), 1(Integer), ITC(String), 40(Integer), INSERT(String), Sell(String), 2021-01-26 00:50:27.528(Timestamp), Y(String), -40(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: delete from trade_output where security_Code in ( ? ) 
+2021-01-26 00:50:27 -==> Parameters: ITC(String)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code in ( ? ) group by a.SECURITY_CODE 
+2021-01-26 00:50:27 -==> Parameters: ITC(String)
+2021-01-26 00:50:27 -<==      Total: 1
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_output (SECURITY_CODE, QUANTITY ) values ( ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: ITC(String), -40(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -securityCodeOld
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_input ( `TRANSCATION_ID`, `TRADE_ID`, `VERSION`, `SECURITY_CODE`, `QUANTITY`, `OPERATION_TYPE`, `SELL_TYPE`, `OPERATION_DATE`, `IS_VALID`, `REAL_QUANTITY` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: 3(Integer), 3(Integer), 1(Integer), INF(String), 70(Integer), INSERT(String), Buy(String), 2021-01-26 00:50:27.631(Timestamp), Y(String), 70(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: delete from trade_output where security_Code in ( ? ) 
+2021-01-26 00:50:27 -==> Parameters: INF(String)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code in ( ? ) group by a.SECURITY_CODE 
+2021-01-26 00:50:27 -==> Parameters: INF(String)
+2021-01-26 00:50:27 -<==      Total: 1
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_output (SECURITY_CODE, QUANTITY ) values ( ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: INF(String), 70(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: select a.TRANSACTION_OUTPUT_ID,a.SECURITY_CODE,a.QUANTITY from trade_output a WHERE 1 = 1 order by a.TRANSACTION_OUTPUT_ID desc 
+2021-01-26 00:50:27 -==> Parameters: 
+2021-01-26 00:50:27 -<==      Total: 3
+2021-01-26 00:50:27 -B
+2021-01-26 00:50:27 -==>  Preparing: select a.TRADE_INPUT_ID,a.TRANSCATION_ID,a.TRADE_ID,a.VERSION,a.SECURITY_CODE,a.QUANTITY,a.OPERATION_TYPE,a.SELL_TYPE,a.OPERATION_DATE,a.IS_VALID,a.REAL_QUANTITY from trade_input a WHERE 1 = 1 and a.TRADE_ID = ? and a.IS_VALID = ? order by a.TRADE_INPUT_ID desc 
+2021-01-26 00:50:27 -==> Parameters: 1(Integer), Y(String)
+2021-01-26 00:50:27 -<==      Total: 1
+2021-01-26 00:50:27 -tradeInputs
+2021-01-26 00:50:27 -==>  Preparing: update trade_input SET `TRANSCATION_ID` = ?, `TRADE_ID` = ?, `VERSION` = ?, `SECURITY_CODE` = ?, `QUANTITY` = ?, `OPERATION_TYPE` = ?, `SELL_TYPE` = ?, `OPERATION_DATE` = ?, `IS_VALID` = ?, `REAL_QUANTITY` = ? where TRADE_INPUT_ID = ? 
+2021-01-26 00:50:27 -==> Parameters: 1(Integer), 1(Integer), 1(Integer), REL(String), 50(Integer), INSERT(String), Buy(String), 2021-01-26 00:50:27.0(Timestamp), N(String), 50(Integer), 194(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -securityCodeOld
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_input ( `TRANSCATION_ID`, `TRADE_ID`, `VERSION`, `SECURITY_CODE`, `QUANTITY`, `OPERATION_TYPE`, `SELL_TYPE`, `OPERATION_DATE`, `IS_VALID`, `REAL_QUANTITY` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: 4(Integer), 1(Integer), 2(Integer), REL(String), 60(Integer), UPDATE(String), Buy(String), 2021-01-26 00:50:27.826(Timestamp), Y(String), 60(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: delete from trade_output where security_Code in ( ? ) 
+2021-01-26 00:50:27 -==> Parameters: REL(String)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code in ( ? ) group by a.SECURITY_CODE 
+2021-01-26 00:50:27 -==> Parameters: REL(String)
+2021-01-26 00:50:27 -<==      Total: 1
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_output (SECURITY_CODE, QUANTITY ) values ( ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: REL(String), 60(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -==>  Preparing: select a.TRANSACTION_OUTPUT_ID,a.SECURITY_CODE,a.QUANTITY from trade_output a WHERE 1 = 1 order by a.TRANSACTION_OUTPUT_ID desc 
+2021-01-26 00:50:27 -==> Parameters: 
+2021-01-26 00:50:27 -<==      Total: 3
+2021-01-26 00:50:27 -C
+2021-01-26 00:50:27 -==>  Preparing: select a.TRADE_INPUT_ID,a.TRANSCATION_ID,a.TRADE_ID,a.VERSION,a.SECURITY_CODE,a.QUANTITY,a.OPERATION_TYPE,a.SELL_TYPE,a.OPERATION_DATE,a.IS_VALID,a.REAL_QUANTITY from trade_input a WHERE 1 = 1 and a.TRADE_ID = ? and a.IS_VALID = ? order by a.TRADE_INPUT_ID desc 
+2021-01-26 00:50:27 -==> Parameters: 2(Integer), Y(String)
+2021-01-26 00:50:27 -<==      Total: 1
+2021-01-26 00:50:27 -tradeInputs
+2021-01-26 00:50:27 -==>  Preparing: update trade_input SET `TRANSCATION_ID` = ?, `TRADE_ID` = ?, `VERSION` = ?, `SECURITY_CODE` = ?, `QUANTITY` = ?, `OPERATION_TYPE` = ?, `SELL_TYPE` = ?, `OPERATION_DATE` = ?, `IS_VALID` = ?, `REAL_QUANTITY` = ? where TRADE_INPUT_ID = ? 
+2021-01-26 00:50:27 -==> Parameters: 2(Integer), 2(Integer), 1(Integer), ITC(String), 40(Integer), INSERT(String), Sell(String), 2021-01-26 00:50:28.0(Timestamp), N(String), -40(Integer), 195(Integer)
+2021-01-26 00:50:27 -<==    Updates: 1
+2021-01-26 00:50:27 -securityCodeOld
+2021-01-26 00:50:27 -==>  Preparing: insert into trade_input ( `TRANSCATION_ID`, `TRADE_ID`, `VERSION`, `SECURITY_CODE`, `QUANTITY`, `OPERATION_TYPE`, `SELL_TYPE`, `OPERATION_DATE`, `IS_VALID`, `REAL_QUANTITY` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) 
+2021-01-26 00:50:27 -==> Parameters: 5(Integer), 2(Integer), 2(Integer), ITC(String), 30(Integer), CANCEL(String), Buy(String), 2021-01-26 00:50:27.982(Timestamp), Y(String), 0(Integer)
+2021-01-26 00:50:28 -<==    Updates: 1
+2021-01-26 00:50:28 -==>  Preparing: delete from trade_output where security_Code in ( ? ) 
+2021-01-26 00:50:28 -==> Parameters: ITC(String)
+2021-01-26 00:50:28 -<==    Updates: 1
+2021-01-26 00:50:28 -==>  Preparing: select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code in ( ? ) group by a.SECURITY_CODE 
+2021-01-26 00:50:28 -==> Parameters: ITC(String)
+2021-01-26 00:50:28 -<==      Total: 1
+2021-01-26 00:50:28 -==>  Preparing: insert into trade_output (SECURITY_CODE, QUANTITY ) values ( ?, ? ) 
+2021-01-26 00:50:28 -==> Parameters: ITC(String), 0(Integer)
+2021-01-26 00:50:28 -<==    Updates: 1
+2021-01-26 00:50:28 -==>  Preparing: select a.TRANSACTION_OUTPUT_ID,a.SECURITY_CODE,a.QUANTITY from trade_output a WHERE 1 = 1 order by a.TRANSACTION_OUTPUT_ID desc 
+2021-01-26 00:50:28 -==> Parameters: 
+2021-01-26 00:50:28 -<==      Total: 3
+2021-01-26 00:50:28 -D
+2021-01-26 00:50:28 -securityCodeOld
+2021-01-26 00:50:28 -==>  Preparing: insert into trade_input ( `TRANSCATION_ID`, `TRADE_ID`, `VERSION`, `SECURITY_CODE`, `QUANTITY`, `OPERATION_TYPE`, `SELL_TYPE`, `OPERATION_DATE`, `IS_VALID`, `REAL_QUANTITY` ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) 
+2021-01-26 00:50:28 -==> Parameters: 6(Integer), 4(Integer), 1(Integer), INF(String), 20(Integer), INSERT(String), Sell(String), 2021-01-26 00:50:28.097(Timestamp), Y(String), -20(Integer)
+2021-01-26 00:50:28 -<==    Updates: 1
+2021-01-26 00:50:28 -==>  Preparing: delete from trade_output where security_Code in ( ? ) 
+2021-01-26 00:50:28 -==> Parameters: INF(String)
+2021-01-26 00:50:28 -<==    Updates: 1
+2021-01-26 00:50:28 -==>  Preparing: select sum(a.REAL_QUANTITY) 'QUANTITY',a.SECURITY_CODE from trade_input a where is_Valid='Y' and security_Code in ( ? ) group by a.SECURITY_CODE 
+2021-01-26 00:50:28 -==> Parameters: INF(String)
+2021-01-26 00:50:28 -<==      Total: 1
+2021-01-26 00:50:28 -==>  Preparing: insert into trade_output (SECURITY_CODE, QUANTITY ) values ( ?, ? ) 
+2021-01-26 00:50:28 -==> Parameters: INF(String), 50(Integer)
+2021-01-26 00:50:28 -<==    Updates: 1
+2021-01-26 00:50:28 -==>  Preparing: select a.TRANSACTION_OUTPUT_ID,a.SECURITY_CODE,a.QUANTITY from trade_output a WHERE 1 = 1 order by a.TRANSACTION_OUTPUT_ID desc 
+2021-01-26 00:50:28 -==> Parameters: 
+2021-01-26 00:50:28 -<==      Total: 3
+2021-01-26 00:50:28 -Scheduler quartzScheduler_$_NON_CLUSTERED paused.
+2021-01-26 00:50:28 -Shutting down Quartz Scheduler
+2021-01-26 00:50:28 -Scheduler quartzScheduler_$_NON_CLUSTERED shutting down.
+2021-01-26 00:50:28 -Scheduler quartzScheduler_$_NON_CLUSTERED paused.
+2021-01-26 00:50:28 -Scheduler quartzScheduler_$_NON_CLUSTERED shutdown complete.
+2021-01-26 00:50:28 -Shutting down ExecutorService 'applicationTaskExecutor'
+2021-01-26 00:50:28 -{dataSource-1} closed
