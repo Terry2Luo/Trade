@@ -59,6 +59,11 @@ public class TradeInputServiceImpl implements TradeInputService {
         return tradeInputDao.deleteAll();
     }
 
+	/**
+	 * 保存证券交易信息，并计算头寸信息
+	 * @param tradeInput
+	 * @return
+	 */
 	@Override
 	@Transactional
 	public int saveData(TradeInputDO tradeInput){
