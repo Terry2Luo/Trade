@@ -37,7 +37,7 @@ public class SwaggerConf {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("水规院生产经营后台任务API文档")
+                .title("证券交易系统后台API文档")
                 .description("Restful 风格接口")
                 //服务条款网址
                 //.termsOfServiceUrl("")
